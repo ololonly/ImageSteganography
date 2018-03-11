@@ -5,8 +5,43 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VideoSteganography"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Добавление скрытого ЦВЗ в изображение" Height="463.825" Width="569.914">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="239*"/>
+            <RowDefinition Height="80*"/>
+        </Grid.RowDefinitions>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="42*"/>
+                <RowDefinition Height="138*"/>
+                <RowDefinition Height="59*"/>
+            </Grid.RowDefinitions>
+            <Image x:Name="imagePictureBox" HorizontalAlignment="Stretch" Margin="10"  VerticalAlignment="Stretch" Grid.Row="1"/>
+            <Label Content="Изображение" HorizontalAlignment="Center" Margin="5" VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal"  Grid.Row="2">
+                <TextBox x:Name="imageSearchTextBox" HorizontalAlignment="Center" Height="23" Margin="10" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="160"/>
+                <Button x:Name="imageSearchButton" Content="Обзор" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="80"/>
+            </StackPanel>
+        </Grid>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="42*"/>
+                <RowDefinition Height="138*"/>
+                <RowDefinition Height="59*"/>
+            </Grid.RowDefinitions>
+            <Image x:Name="watermarkPictureBox" HorizontalAlignment="Stretch" Margin="10"  VerticalAlignment="Stretch" Grid.Row="1"/>
+            <Label Content="ЦВЗ" HorizontalAlignment="Center" Margin="5" VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal"  Grid.Row="2">
+                <TextBox x:Name="watermarkSearchTextBox" HorizontalAlignment="Center" Height="23" Margin="10" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="160"/>
+                <Button x:Name="watermarkSearchButton" Content="Обзор" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="80"/>
+            </StackPanel>
+        </Grid>
+        <Button x:Name="steganoButton" Content="Зашифровать" Grid.Column="1" HorizontalAlignment="Stretch" Margin="60,30" Grid.Row="1" VerticalAlignment="Stretch"/>
+
     </Grid>
 </Window>
