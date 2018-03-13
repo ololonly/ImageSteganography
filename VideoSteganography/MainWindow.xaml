@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VideoSteganography"
         mc:Ignorable="d"
-        Title="Добавление скрытого ЦВЗ в изображение" Height="463.825" Width="1134.414">
+        Title="Добавление скрытого ЦВЗ в изображение" Height="465" Width="1150" MinHeight="465" MinWidth="1150">
     <Grid Background="Cyan">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -25,7 +25,7 @@
             <Image x:Name="imagePictureBox" HorizontalAlignment="Stretch" Margin="10"  VerticalAlignment="Stretch" Grid.Row="1"/>
             <Label Content="Исходное изображение" HorizontalAlignment="Center" Margin="5" VerticalAlignment="Center" />
             <StackPanel Orientation="Horizontal"  Grid.Row="2">
-                <TextBox x:Name="imageSearchTextBox" HorizontalAlignment="Center" Height="23" Margin="10" TextWrapping="Wrap" VerticalAlignment="Center" Width="200"/>
+                <TextBox x:Name="imageSearchTextBox" HorizontalAlignment="Center" Height="23" Margin="10" TextWrapping="NoWrap" VerticalAlignment="Center" Width="250"/>
                 <Button x:Name="imageSearchButton" Content="Обзор" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="80"/>
             </StackPanel>
         </Grid>
@@ -38,7 +38,7 @@
             <Image x:Name="watermarkPictureBox" HorizontalAlignment="Stretch" Margin="10"  VerticalAlignment="Stretch" Grid.Row="1"/>
             <Label Content="ЦВЗ" HorizontalAlignment="Center" Margin="5" VerticalAlignment="Center" />
             <StackPanel Orientation="Horizontal"  Grid.Row="2">
-                <TextBox x:Name="watermarkSearchTextBox" HorizontalAlignment="Center" Height="23" Margin="10" TextWrapping="Wrap" VerticalAlignment="Center" Width="200"/>
+                <TextBox x:Name="watermarkSearchTextBox" HorizontalAlignment="Center" Height="23" Margin="10" TextWrapping="NoWrap" VerticalAlignment="Center" Width="250"/>
                 <Button x:Name="watermarkSearchButton" Content="Обзор" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="80"/>
             </StackPanel>
             <Button x:Name="watermarkSaveButton" Content="Сохранить" HorizontalAlignment="Right" Visibility="Collapsed" VerticalAlignment="Center" Width="120" Height="40" Margin="60,10" Grid.Row="2"/>
@@ -65,7 +65,7 @@
             <Image x:Name="encryptedPictureBox" HorizontalAlignment="Stretch" Margin="10"  VerticalAlignment="Stretch" Grid.Row="1"/>
             <Label Content="Изображение с шифром" HorizontalAlignment="Center" Margin="5" VerticalAlignment="Center" />
             <StackPanel Visibility="Visible" Orientation="Horizontal"  Grid.Row="2">
-                <TextBox x:Name="encryptedSearchTextBox" HorizontalAlignment="Center" Height="23" Margin="10" TextWrapping="Wrap" VerticalAlignment="Center" Width="200"/>
+                <TextBox x:Name="encryptedSearchTextBox" HorizontalAlignment="Center" Height="23" Margin="10" TextWrapping="NoWrap" VerticalAlignment="Center" Width="250"/>
                 <Button x:Name="encryptedSearchButton" Content="Обзор" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="80"/>
             </StackPanel>
             <Button x:Name="encryptedSaveButton" Content="Сохранить" HorizontalAlignment="Right" Visibility="Collapsed" VerticalAlignment="Center" Width="120" Height="40" Margin="60,10" Grid.Row="2"/>
