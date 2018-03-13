@@ -157,6 +157,7 @@ namespace VideoSteganography
                     watermark = iStegano.Watermark;
                     watermarkPictureBox.Source = convertFromBitmap(watermark);
                     watermarkSaveButton.Visibility = Visibility.Visible;
+
                 }
                 catch (Exception exception)
                 {
