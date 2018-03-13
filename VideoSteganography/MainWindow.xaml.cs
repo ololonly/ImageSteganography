@@ -33,6 +33,11 @@ namespace VideoSteganography
             Bitmap encryptedImage = null;
             fileDialog.Filter = Filter;
             saveDialog.Filter = Filter;
+            List<Color> encryptColors = new List<Color>() { Color.Blue, Color.Green, Color.Red };
+            colorsComboBox.ItemsSource = encryptColors;
+            colorsComboBox.SelectedIndex = 0;
+            
+            
 
             #region CheckBox
             cryptCheckBox.Checked += (s, e) =>
@@ -68,13 +73,14 @@ namespace VideoSteganography
             cryptCheckBox.IsChecked = true;
             #endregion
 
-            watermarkSearchButton.Click += (s, e) =>
+            #region SearchButtons
+
+             watermarkSearchButton.Click += (s, e) =>
             {
                 if (fileDialog.ShowDialog() == true)
                 {
                     watermarkSearchTextBox.Text = fileDialog.FileName;
-                    BitmapImage image = new BitmapImage(new Uri(fileDialog.FileName));
-                    watermarkPictureBox.Source = image;
+                    watermarkPictureBox.Source = new BitmapImage(new Uri(fileDialog.FileName));
                 }
             };
             imageSearchButton.Click += (s, e) =>
@@ -82,27 +88,43 @@ namespace VideoSteganography
                 if (fileDialog.ShowDialog() == true)
                 {
                     imageSearchTextBox.Text = fileDialog.FileName;
+                    imagePictureBox.Source = new BitmapImage(new Uri(fileDialog.FileName));
                 }
-                BitmapImage image = new BitmapImage(new Uri(fileDialog.FileName));
-                imagePictureBox.Source = image;
             };
             encryptedSearchButton.Click += (s, e) =>
             {
                 if (fileDialog.ShowDialog() == true)
                 {
                     encryptedSearchTextBox.Text = fileDialog.FileName;
+                    encryptedPictureBox.Source = new BitmapImage(new Uri(fileDialog.FileName));
                 }
-                BitmapImage image = new BitmapImage(new Uri(fileDialog.FileName));
-                encryptedPictureBox.Source = image;
             };
 
-            encryptButton.Click += (s, e) =>
+            #endregion
+
+            #region Encrypt
+
+             encryptButton.Click += (s, e) =>
             {
-                Stegano iStegano = new Stegano(imageSearchTextBox.Text,Color.Blue);
-                iStegano.Encrypt(new Bitmap(watermarkSearchTextBox.Text));
-                encryptedImage = iStegano.EnscryptedImage;
-                encryptedPictureBox.Source = convertFromBitmap(encryptedImage);
-                encryptedSaveButton.Visibility = Visibility.Visible;
+                Stegano iStegano = new Stegano(imageSearchTextBox.Text, (Color)colorsComboBox.Items.CurrentItem);
+                if (watermark == null && watermarkSearchTextBox.Text == string.Empty)
+                {
+                    MessageBox.Show("Выберите изображение для дешифровки!", "Ошибка", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    return;
+                }
+                try
+                {
+                    iStegano.Encrypt(watermark != null && watermarkSearchTextBox.Text == string.Empty ? watermark : new Bitmap(watermarkSearchTextBox.Text));
+                    encryptedImage = iStegano.EnscryptedImage;
+                    encryptedPictureBox.Source = convertFromBitmap(encryptedImage);
+                    encryptedSaveButton.Visibility = Visibility.Visible;
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message,"Ошибка",MessageBoxButton.OK,MessageBoxImage.Error);
+                }
+                
             };
             encryptedSaveButton.Click += (s, e) =>
             {
@@ -116,13 +138,31 @@ namespace VideoSteganography
                 }
             };
 
+            #endregion
+
+            #region Decrypt
+
             decryptButton.Click += (s, e) =>
             {
-                Stegano iStegano = new Stegano(imageSearchTextBox.Text,Color.Blue);
-                iStegano.Decrypt(new Bitmap(encryptedSearchTextBox.Text));
-                watermark = iStegano.Watermark;
-                watermarkPictureBox.Source = convertFromBitmap(watermark);
-                watermarkSaveButton.Visibility = Visibility.Visible;
+                Stegano iStegano = new Stegano(imageSearchTextBox.Text,(Color)colorsComboBox.Items.CurrentItem);
+                if (encryptedImage == null && encryptedSearchTextBox.Text == string.Empty)
+                {
+                    MessageBox.Show("Выберите изображение для дешифровки!", "Ошибка", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    return;
+                }
+                try
+                {
+                    iStegano.Decrypt(encryptedImage!=null && encryptedSearchTextBox.Text==string.Empty? encryptedImage : new Bitmap(encryptedSearchTextBox.Text));
+                    watermark = iStegano.Watermark;
+                    watermarkPictureBox.Source = convertFromBitmap(watermark);
+                    watermarkSaveButton.Visibility = Visibility.Visible;
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message,"Ошибка",MessageBoxButton.OK,MessageBoxImage.Error);
+                }
+                
             };
             watermarkSaveButton.Click += (s, e) =>
             {
@@ -135,6 +175,8 @@ namespace VideoSteganography
                     }
                 }
             };
+
+            #endregion
         }
 
         private BitmapImage convertFromBitmap(Bitmap image)
@@ -151,5 +193,6 @@ namespace VideoSteganography
                 return bitmapImage;
             }
         }
-    }
+
+     }
 }

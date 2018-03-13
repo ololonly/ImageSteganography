@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VideoSteganography"
         mc:Ignorable="d"
         Title="Добавление скрытого ЦВЗ в изображение" Height="463.825" Width="1134.414">
-    <Grid>
+    <Grid Background="Cyan">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
@@ -44,7 +44,18 @@
             <Button x:Name="watermarkSaveButton" Content="Сохранить" HorizontalAlignment="Right" Visibility="Collapsed" VerticalAlignment="Center" Width="120" Height="40" Margin="60,10" Grid.Row="2"/>
         </Grid>
         <Button x:Name="encryptButton" Content="Зашифровать" Grid.Column="1" HorizontalAlignment="Stretch" Margin="60,30" Grid.Row="1" VerticalAlignment="Stretch" Grid.ColumnSpan="1"/>
-        <CheckBox x:Name="cryptCheckBox" Content="Зашифровать" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center"/>
+        <StackPanel Grid.Row="1">
+            <TextBlock HorizontalAlignment="Center" Margin="5" Text="Выбор цвета для стеганографии"></TextBlock>
+            <ComboBox x:Name="colorsComboBox" Width="Auto" Margin="30,10">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle Height="20" Stretch="UniformToFill"  Fill="{Binding Name}" Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBox}}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <CheckBox x:Name="cryptCheckBox" Content="Зашифровать" HorizontalAlignment="Center" Margin="5" Grid.Row="1" VerticalAlignment="Center"/>
+        </StackPanel>
+
         <Grid x:Name="encryptedImageGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="42*"/>
