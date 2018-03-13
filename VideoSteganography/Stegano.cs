@@ -56,7 +56,6 @@ namespace VideoSteganography
 
         private List<int> GetPallete()
         {
-            var palette = new List<string>();
             var pixels = GetPixelList(Image).Distinct();
             List<int> sortedPixels = new List<int>();
             foreach (var pixel in pixels)
@@ -76,7 +75,7 @@ namespace VideoSteganography
         public void Encrypt(Bitmap watermark)
         {
             this.Watermark = watermark;
-            if (GetPixelArray(Color.Black, Watermark).Length > GetPixelArray(Color.Blue, this.Image).Length) throw new IndexOutOfRangeException("ЦВЗ больше исходного изображения");
+            if (Watermark.Height*watermark.Width > Image.Height*Image.Width) throw new IndexOutOfRangeException("ЦВЗ больше исходного изображения");
             WriteEnscryptedImage();
         }
         
@@ -150,7 +149,7 @@ namespace VideoSteganography
         public void Decrypt(Bitmap encrypted)
         {
             this.EnscryptedImage = encrypted;
-            if (GetPixelArray(Color.Black, EnscryptedImage).Length != GetPixelArray(Color.Blue, this.Image).Length) throw new IndexOutOfRangeException("Шифрованное изображение не совпадает с оригиналом");
+            if (EnscryptedImage.Width*EnscryptedImage.Height != Image.Width*Image.Height) throw new IndexOutOfRangeException("Шифрованное изображение не совпадает с оригиналом");
             DecryptWatermark();
         }
 
