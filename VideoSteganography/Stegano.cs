@@ -65,36 +65,6 @@ namespace VideoSteganography
             PSNR = 20 * Math.Log10(palette.Max() / Math.Sqrt(MSE));
         }
 
-        public double NMSE()
-        {
-            double error = 0;
-            var image = GetPixelArray(encryptionColour, Image);
-            var encrypted = GetPixelArray(encryptionColour, EnscryptedImage);
-            for (int i = 0; i < Image.Width; i++)
-            {
-                for (int j = 0; j < Image.Height; j++)
-                {
-                    error += Math.Pow(image[i, j] - encrypted[i, j], 2)/Math.Pow(image[i,j],2);
-                }
-            }
-            return error;
-        }
-
-        public double SNR()
-        {
-            double error = 0;
-            var image = GetPixelArray(encryptionColour, Image);
-            var encrypted = GetPixelArray(encryptionColour, EnscryptedImage);
-            for (int i = 0; i < Image.Width; i++)
-            {
-                for (int j = 0; j < Image.Height; j++)
-                {
-                    error += Math.Pow(image[i, j] - encrypted[i, j], 2);
-                }
-            }
-            return error / (image.Length);
-        }
-
         #region Palette
 
         private List<int> GetPixelList()
@@ -164,9 +134,13 @@ namespace VideoSteganography
             for (i = 0; i < watermarkBytes.GetLength(0); i++)
                 for (j = 0; j < watermarkBytes.GetLength(1); j++)
                 {
+                    if (i == watermarkBytes.GetLength(0) - 1 && j == watermarkBytes.GetLength(1) - 1)
+                    {
+                        MarkEndOfFile(ref result[i,j],watermarkBytes[i,j]);
+                        return result;
+                    }
                     if (watermarkBytes[i, j] == 1) ChangeColour(ref result[i, j]);
                 }
-            MarkEndOfFile(ref result[--i,--j]);
             return result;
         }
 
@@ -175,9 +149,11 @@ namespace VideoSteganography
             pixel = palette.IndexOf(pixel) == palette.Count - 1 ? palette[palette.IndexOf(pixel) - 1] : palette[palette.IndexOf(pixel) + 1];
         }
 
-        private void MarkEndOfFile(ref int pixel)
+        private void MarkEndOfFile(ref int pixel, int isLastPixelWhite)
         {
-            pixel = palette.IndexOf(pixel)==palette.Count-1 ? palette[palette.IndexOf(pixel) - 3] : palette[palette.IndexOf(pixel) + 1];
+            if (isLastPixelWhite==1) pixel = palette.IndexOf(pixel) >= palette.Count - 3 ? palette[palette.IndexOf(pixel) - 2] : palette[palette.IndexOf(pixel) + 2];
+            else pixel = palette.IndexOf(pixel) >= palette.Count - 4 ? palette[palette.IndexOf(pixel) - 3] : palette[palette.IndexOf(pixel) + 3];
+
         }
 
         private void WriteEnscryptedImage()
@@ -234,7 +210,7 @@ namespace VideoSteganography
             for (int i = 0; i < encrypt.GetLength(0); i++)
             for (int j = 0; j < encrypt.GetLength(1); j++)
             {
-                if (Math.Abs(palette.IndexOf(original[i, j]) - palette.IndexOf(encrypt[i, j])) == 2)
+                if (Math.Abs(palette.IndexOf(original[i, j]) - palette.IndexOf(encrypt[i, j])) == 2 || Math.Abs(palette.IndexOf(original[i, j]) - palette.IndexOf(encrypt[i, j])) == 3)
                 {
                     width = ++i;
                     height = ++j;
@@ -252,11 +228,14 @@ namespace VideoSteganography
             var encrypt = GetPixelArray(encryptionColour, EnscryptedImage);
             
             int[,] watermarkPixels = new int[width,height];
-            for (int i = 0; i < Image.Width; i++)
-            for (int j = 0; j < Image.Height; j++)
+            int i, j = 0;
+            for (i = 0; i < Image.Width; i++)
+            for (j = 0; j < Image.Height; j++)
             {
                 if (original[i, j] != encrypt[i, j]) watermarkPixels[i, j] = 1;
             }
+            watermarkPixels[--width, --height] =
+                Math.Abs(palette.IndexOf(original[width, height]) - palette.IndexOf(encrypt[width, height])) == 2 ? 1 : 0;
             return watermarkPixels;
         }
 
