@@ -43,9 +43,9 @@
             </StackPanel>
             <Button x:Name="watermarkSaveButton" Content="Сохранить" HorizontalAlignment="Right" Visibility="Collapsed" VerticalAlignment="Center" Width="120" Height="40" Margin="60,10" Grid.Row="2"/>
         </Grid>
-        <Button x:Name="encryptButton" Content="Зашифровать" Grid.Column="1" HorizontalAlignment="Stretch" Margin="60,30" Grid.Row="1" VerticalAlignment="Stretch" Grid.ColumnSpan="1"/>
+        <Button x:Name="encryptButton" Content="Скрыть" Grid.Column="1" HorizontalAlignment="Stretch" Margin="60,30" Grid.Row="1" VerticalAlignment="Stretch" Grid.ColumnSpan="1"/>
         <StackPanel Grid.Row="1">
-            <TextBlock HorizontalAlignment="Center" Margin="5" Text="Выбор цвета для стеганографии"></TextBlock>
+            <TextBlock HorizontalAlignment="Center" Margin="5" Text="Выбор цвета для скрытия"></TextBlock>
             <ComboBox x:Name="colorsComboBox" Width="Auto" Margin="30,10">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -70,7 +70,7 @@
             </StackPanel>
             <Button x:Name="encryptedSaveButton" Content="Сохранить" HorizontalAlignment="Right" Visibility="Collapsed" VerticalAlignment="Center" Width="120" Height="40" Margin="60,10" Grid.Row="2"/>
         </Grid>
-        <Button x:Name="decryptButton" Content="Дешифровать" Grid.Column="2" HorizontalAlignment="Stretch" Margin="57,31,62,29" Grid.Row="1" VerticalAlignment="Stretch" />
+        <Button x:Name="decryptButton" Content="Обраружить" Grid.Column="2" HorizontalAlignment="Stretch" Margin="57,31,62,29" Grid.Row="1" VerticalAlignment="Stretch" />
 
     </Grid>
 </Window>

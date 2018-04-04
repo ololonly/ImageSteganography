@@ -13,16 +13,16 @@ namespace VideoSteganography
         /// </summary>
         public Bitmap Image { get; private set; }
         /// <summary>
-        /// Enctypted watermark
+        /// Hidden watermark
         /// </summary>
         public Bitmap Watermark { get; private set; }
         /// <summary>
         /// Encrypted image
         /// </summary>
-        public Bitmap EnscryptedImage { get; private set; }
+        public Bitmap ImageWithWatermark { get; private set; }
 
         private List<int> palette;
-        private readonly Color encryptionColour;
+        private readonly Color hidingColor;
 
         /// <summary>
         /// Creating one of Stegano type object. This class can encrypt and decrypt images with watermarks using palette changing method.
@@ -32,9 +32,9 @@ namespace VideoSteganography
         public Stegano(string image, Color colour)
         {
             this.Image=new Bitmap(image);
-            encryptionColour = colour;
+            hidingColor = colour;
             palette = GetPallete();
-            EnscryptedImage = this.Image;
+            ImageWithWatermark = this.Image;
         }
 
         /// <summary>
@@ -48,8 +48,8 @@ namespace VideoSteganography
         {
             MSE = 0;
             double denominator = 0;
-            var image = GetPixelArray(encryptionColour, Image);
-            var encrypted = GetPixelArray(encryptionColour, EnscryptedImage);
+            var image = GetPixelArray(hidingColor, Image);
+            var encrypted = GetPixelArray(hidingColor, ImageWithWatermark);
             for (int i = 0; i < Image.Width; i++)
             {
                 for (int j = 0; j < Image.Height; j++)
@@ -73,9 +73,9 @@ namespace VideoSteganography
             for (int i = 0; i < Image.Width; i++)
             for (int j = 0; j < Image.Height; j++)
             {
-                result.Add(encryptionColour == Color.Blue
+                result.Add(hidingColor == Color.Blue
                     ? Image.GetPixel(i, j).B
-                    : encryptionColour == Color.Green
+                    : hidingColor == Color.Green
                         ? Image.GetPixel(i, j).G
                         : Image.GetPixel(i, j).R);
             }
@@ -97,17 +97,17 @@ namespace VideoSteganography
         #endregion
 
         /// <summary>
-        /// Encrypt image with watermark.
+        /// Hide image with watermark.
         /// </summary>
         /// <param name="watermark">Watermark should be monochrome bmp image. Also watermark's size should not exceed original image size.</param>
-        public void Encrypt(Bitmap watermark)
+        public void Hide(Bitmap watermark)
         {
             this.Watermark = watermark;
             if (Watermark.Height*watermark.Width > Image.Height*Image.Width) throw new IndexOutOfRangeException("ЦВЗ больше исходного изображения");
-            WriteEnscryptedImage();
+            WriteImageWithWM();
         }
         
-        #region Encrypt
+        #region Hide
         
         private int[,] GetPixelArray(Color colour, Bitmap image)
         {
@@ -126,9 +126,9 @@ namespace VideoSteganography
             return result;
         }
         
-        private int[,] GetEncryptedImage()
+        private int[,] GetImageWithWM()
         {
-            var result = GetPixelArray(encryptionColour, Image);
+            var result = GetPixelArray(hidingColor, Image);
             var watermarkBytes = GetPixelArray(Color.Black, Watermark);
             int i, j = 0;
             for (i = 0; i < watermarkBytes.GetLength(0); i++)
@@ -156,21 +156,21 @@ namespace VideoSteganography
 
         }
 
-        private void WriteEnscryptedImage()
+        private void WriteImageWithWM()
         {
-            var enscryptedBytes = GetEncryptedImage();
-            for (int i = 0; i < EnscryptedImage.Width; i++)
-                for (int j = 0; j < EnscryptedImage.Height; j++)
+            var enscryptedBytes = GetImageWithWM();
+            for (int i = 0; i < ImageWithWatermark.Width; i++)
+                for (int j = 0; j < ImageWithWatermark.Height; j++)
                 {
-                    Color pixel = EnscryptedImage.GetPixel(i, j);
-                    EnscryptedImage.SetPixel(i, j, GetNewColor(i, j, enscryptedBytes[i, j]));
+                    Color pixel = ImageWithWatermark.GetPixel(i, j);
+                    ImageWithWatermark.SetPixel(i, j, GetNewColor(i, j, enscryptedBytes[i, j]));
                 }
         }
 
         private Color GetNewColor(int i, int j, int value)
         {
-            if (encryptionColour == Color.Blue) return Color.FromArgb(Image.GetPixel(i, j).R, Image.GetPixel(i, j).G, value);
-            else if (encryptionColour == Color.Green)
+            if (hidingColor == Color.Blue) return Color.FromArgb(Image.GetPixel(i, j).R, Image.GetPixel(i, j).G, value);
+            else if (hidingColor == Color.Green)
                 return Color.FromArgb(Image.GetPixel(i, j).R, value, Image.GetPixel(i, j).B);
             else return Color.FromArgb(value, Image.GetPixel(i, j).G, Image.GetPixel(i, j).B);
         }
@@ -178,19 +178,19 @@ namespace VideoSteganography
         #endregion
 
         /// <summary>
-        /// Decrypt watermark from encrypted image.
+        /// Detect watermark from image.
         /// </summary>
-        /// <param name="encrypted">Encrypted image, should be visually equal to original image.</param>
-        public void Decrypt(Bitmap encrypted)
+        /// <param name="image">Image, containing watermark, should be visually equal to original image.</param>
+        public void Detect(Bitmap image)
         {
-            this.EnscryptedImage = encrypted;
-            if (EnscryptedImage.Width*EnscryptedImage.Height != Image.Width*Image.Height) throw new IndexOutOfRangeException("Шифрованное изображение не совпадает с оригиналом");
-            DecryptWatermark();
+            this.ImageWithWatermark = image;
+            if (ImageWithWatermark.Width*ImageWithWatermark.Height != Image.Width*Image.Height) throw new IndexOutOfRangeException("Шифрованное изображение не совпадает с оригиналом");
+            DetectWatermark();
         }
 
-        #region Decrypt
+        #region Detect
 
-        private void DecryptWatermark()
+        private void DetectWatermark()
         {
             int width, height;
             GetWatermarkSize(out width,out height);
@@ -205,8 +205,8 @@ namespace VideoSteganography
 
         private void GetWatermarkSize(out int width, out int height)
         {
-            var original = GetPixelArray(encryptionColour, Image);
-            var encrypt = GetPixelArray(encryptionColour, EnscryptedImage);
+            var original = GetPixelArray(hidingColor, Image);
+            var encrypt = GetPixelArray(hidingColor, ImageWithWatermark);
             for (int i = 0; i < encrypt.GetLength(0); i++)
             for (int j = 0; j < encrypt.GetLength(1); j++)
             {
@@ -224,8 +224,8 @@ namespace VideoSteganography
 
         private int[,] GetWatermarkPixels(int width, int height)
         {
-            var original = GetPixelArray(encryptionColour, Image);
-            var encrypt = GetPixelArray(encryptionColour, EnscryptedImage);
+            var original = GetPixelArray(hidingColor, Image);
+            var encrypt = GetPixelArray(hidingColor, ImageWithWatermark);
             
             int[,] watermarkPixels = new int[width,height];
             int i, j = 0;

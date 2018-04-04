@@ -102,7 +102,7 @@ namespace VideoSteganography
 
             #endregion
 
-            #region Encrypt
+            #region Hide
 
              encryptButton.Click += (s, e) =>
             {
@@ -115,8 +115,8 @@ namespace VideoSteganography
                 }
                 try
                 {
-                    iStegano.Encrypt(watermark != null && watermarkSearchTextBox.Text == string.Empty ? watermark : new Bitmap(watermarkSearchTextBox.Text));
-                    encryptedImage = iStegano.EnscryptedImage;
+                    iStegano.Hide(watermark != null && watermarkSearchTextBox.Text == string.Empty ? watermark : new Bitmap(watermarkSearchTextBox.Text));
+                    encryptedImage = iStegano.ImageWithWatermark;
                     encryptedPictureBox.Source = convertFromBitmap(encryptedImage);
                     encryptedSaveButton.Visibility = Visibility.Visible;
                 }
@@ -140,7 +140,7 @@ namespace VideoSteganography
 
             #endregion
 
-            #region Decrypt
+            #region Detect
 
             decryptButton.Click += (s, e) =>
             {
@@ -153,7 +153,7 @@ namespace VideoSteganography
                 }
                 try
                 {
-                    iStegano.Decrypt(encryptedImage!=null && encryptedSearchTextBox.Text==string.Empty? encryptedImage : new Bitmap(encryptedSearchTextBox.Text));
+                    iStegano.Detect(encryptedImage!=null && encryptedSearchTextBox.Text==string.Empty? encryptedImage : new Bitmap(encryptedSearchTextBox.Text));
                     watermark = iStegano.Watermark;
                     watermarkPictureBox.Source = convertFromBitmap(watermark);
                     watermarkSaveButton.Visibility = Visibility.Visible;
